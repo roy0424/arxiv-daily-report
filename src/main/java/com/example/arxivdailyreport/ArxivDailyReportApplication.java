@@ -1,0 +1,13 @@
+package com.example.arxivdailyreport;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ArxivDailyReportApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ArxivDailyReportApplication.class, args);
+    }
+
+}
