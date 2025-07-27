@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,8 +41,7 @@ public class ArxivFetcherService {
                 Paper paper = Paper.builder()
                         .title(title)
                         .link(link)
-                        .description(description)
-                        .category(category)
+                        .summary(description)
                         .fetchedAt(LocalDate.now())
                         .embedded(false)
                         .fullTextCached(false)

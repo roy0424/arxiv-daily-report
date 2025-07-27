@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface PaperRepository extends JpaRepository<Paper, Long> {
     Optional<Paper> findByLink(String link);
+    boolean existsByLink(String link);
 }

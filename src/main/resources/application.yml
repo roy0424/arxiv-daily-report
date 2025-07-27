@@ -1,38 +1,51 @@
 spring:
   application:
     name: arxiv-daily-report
+  config:
+    import: optional:file:.env[.properties]
 
   ai:
     openai:
-      api-key:
+      api-key: ${OPENAI_API_KEY}
       chat:
-        model: gpt-4o
+        options:
+          model: gpt-4o
+    vectorstore:
+      qdrant:
+        host: ${DB_HOST}
+        collection-name: papers
+        port: ${QDRANT_GRPC_PORT}
+        use-tls: false
+        initialize-schema: true
+
 
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     hikari:
       maximum-pool-size: 10
 
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: create
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+        format_sql: false
 
   task:
     scheduling:
       pool:
         size: 2
+
+  batch:
+    jdbc:
+      initialize-schema: always
+  sql:
+    init:
+      mode: always
 
 logging:
   level:
