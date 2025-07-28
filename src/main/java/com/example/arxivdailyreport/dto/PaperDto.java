@@ -19,16 +19,10 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PaperDto {
     private String title;
-    
-    private String id;
-    
-    @JsonProperty("abstract")
+    private String absLink;
+    private String pdfLink;
     private String summary;
-    
-    @JsonProperty("categories")
-    private String categoriesRaw;
-    
-    @JsonProperty("update_date")
-    private String updateDateStr;
-
+    private LocalDate updatedAt;
+    private LocalDate fetchedAt;
+    private List<String> categories;
 }
