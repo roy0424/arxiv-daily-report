@@ -2,9 +2,11 @@ package com.example.arxivdailyreport.service;
 
 import com.example.arxivdailyreport.dto.PaperResponse;
 import com.example.arxivdailyreport.entity.ArxivCategory;
+import com.example.arxivdailyreport.entity.Category;
 import com.example.arxivdailyreport.entity.Paper;
 import com.example.arxivdailyreport.exception.BusinessException;
 import com.example.arxivdailyreport.exception.ErrorCode;
+import com.example.arxivdailyreport.repository.CategoryRepository;
 import com.example.arxivdailyreport.repository.PaperRepository;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
@@ -22,8 +24,12 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ArxivFetcherService {
     public final PaperRepository paperRepository;
+    public final CategoryRepository categoryRepository;
 
-    public List<PaperResponse> fetchRss(ArxivCategory category) {
+    public List<PaperResponse> fetchRss(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
+
         String rssUrl = "https://rss.arxiv.org/rss/" + category.getEndpoint();
         List<Paper> newPapers = new ArrayList<>();
 
@@ -36,11 +42,12 @@ public class ArxivFetcherService {
                 String link = Objects.requireNonNull(item.selectFirst("link")).text();
                 String description = Objects.requireNonNull(item.selectFirst("description")).text();
 
-                if (paperRepository.findByLink(link).isPresent()) continue;
+                if (paperRepository.findByAbsLink(link).isPresent()) continue;
 
                 Paper paper = Paper.builder()
                         .title(title)
-                        .link(link)
+                        .absLink(link)
+                        .pdfLink(link.replace("abs", "pdf"))
                         .summary(description)
                         .fetchedAt(LocalDate.now())
                         .embedded(false)

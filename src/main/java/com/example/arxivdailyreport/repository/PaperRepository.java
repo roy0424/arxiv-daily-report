@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface PaperRepository extends JpaRepository<Paper, Long> {
-    Optional<Paper> findByLink(String link);
-    boolean existsByLink(String link);
+    Optional<Paper> findByAbsLink(String absLink);
+    boolean existsByAbsLink(String absLink);
 }

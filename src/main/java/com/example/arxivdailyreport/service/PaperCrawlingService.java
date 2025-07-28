@@ -16,7 +16,7 @@ public class PaperCrawlingService {
     private final PaperContentRepository paperContentRepository;
 
     public String fetchAndCacheFullText(Paper paper) {
-        String content = crawl(paper.getLink());
+        String content = crawl(paper.getPdfLink()); // TODO: Implement actual crawling logic
 
         PaperContent contentEntity = PaperContent.builder()
                 .paper(paper)

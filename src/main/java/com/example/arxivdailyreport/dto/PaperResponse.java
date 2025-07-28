@@ -13,7 +13,8 @@ import java.util.List;
 public class PaperResponse {
     private Long id;
     private String title;
-    private String link;
+    private String absLink;
+    private String pdfLink;
     private List<String> categories;
     private String summary;
 
@@ -21,7 +22,8 @@ public class PaperResponse {
         return PaperResponse.builder()
                 .id(paper.getId())
                 .title(paper.getTitle())
-                .link(paper.getLink())
+                .absLink(paper.getAbsLink())
+                .pdfLink(paper.getPdfLink())
                 .categories(paper.getCategories().stream()
                         .map(Category::getName)
                         .toList())

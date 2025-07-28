@@ -21,12 +21,15 @@ public class Paper {
     private String title;
 
     @Column(nullable = false, unique = true)
-    private String link;
+    private String absLink;
+
+    @Column(nullable = false, unique = true)
+    private String pdfLink;
 
     @Column(length = 5000)
     private String summary;
 
-    private LocalDate publishedAt;
+    private LocalDate updatedAt;
     private LocalDate fetchedAt;
 
     private boolean embedded;

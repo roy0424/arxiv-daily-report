@@ -18,10 +18,10 @@ import java.util.List;
 public class ArxivFetchController {
     private final ArxivFetcherService arxivFetcherService;
 
-    @GetMapping("/fetch-rss/{category}")
+    @GetMapping("/fetch-rss/{categoryId}")
     public ResponseEntity<List<PaperResponse>> fetchRss(
-        @PathVariable("category")ArxivCategory category
+        @PathVariable("categoryId") Long categoryId
     ) {
-        return ResponseEntity.ok(arxivFetcherService.fetchRss(category));
+        return ResponseEntity.ok(arxivFetcherService.fetchRss(categoryId));
     }
 }
