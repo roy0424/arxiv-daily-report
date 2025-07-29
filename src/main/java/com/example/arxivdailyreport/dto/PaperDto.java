@@ -22,7 +22,7 @@ public class PaperDto {
     private String absLink;
     private String pdfLink;
     private String summary;
-    private LocalDate updatedAt;
-    private LocalDate fetchedAt;
+    private String updatedAt;
+    private String fetchedAt;
     private List<String> categories;
 }

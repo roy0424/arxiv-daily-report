@@ -1,5 +1,6 @@
 package com.example.arxivdailyreport.controller;
 
+import com.example.arxivdailyreport.service.RssJobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
@@ -17,20 +18,17 @@ import java.time.LocalDateTime;
 @RequestMapping("/api/batch")
 @RequiredArgsConstructor
 public class BatchJobController {
-    private final JobLauncher jobLauncher;
-    private final Job rssFetchJob;
+    private final RssJobService rssJobService;
 
-    @PostMapping("/rss/fetch")
+    @PostMapping("/rss/json")
     public ResponseEntity<String> fetchRssJob() {
-        try {
-            JobParameters params = new JobParametersBuilder()
-                    .addString("run.id", LocalDateTime.now().toString()) // 중복 방지
-                    .toJobParameters();
+        rssJobService.runRssJobAsync();
+        return ResponseEntity.accepted().body("RSS Job 실행 요청 수락됨");
+    }
 
-            JobExecution execution = jobLauncher.run(rssFetchJob, params);
-            return ResponseEntity.ok("RSS 수집 Job이 실행되었습니다. 상태: " + execution.getStatus());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Job 실행 실패: " + e.getMessage());
-        }
+    @PostMapping("/rss/db")
+    public ResponseEntity<String> fetchRssDbJob() {
+        rssJobService.runRssDbJobAsync();
+        return ResponseEntity.accepted().body("RSS DB Job 실행 요청 수락됨");
     }
 }
