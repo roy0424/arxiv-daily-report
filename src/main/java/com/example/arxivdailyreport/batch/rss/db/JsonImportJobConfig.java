@@ -44,7 +44,7 @@ public class JsonImportJobConfig {
     public Step jsonImportStep() throws IOException {
         return new StepBuilder("jsonImportStep", jobRepository)
                 .<PaperDto, Paper>chunk(50, transactionManager)
-                .reader(jsonPaperReader())
+                .reader(jsonPaperReader(null))
                 .processor(new PaperProcessor(paperRepository, categoryRepository))
                 .writer(paperJpaItemWriter())
                 .build();

@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Title A",
+    "absLink": "http://arxiv.org/abs/1",
+    "pdfLink": "http://arxiv.org/pdf/1.pdf",
+    "summary": "Summary A",
+    "updatedAt": "2024-01-01",
+    "fetchedAt": "2024-01-02",
+    "categories": ["cs.AI"]
+  },
+  {
+    "title": "Title A duplicate",
+    "absLink": "http://arxiv.org/abs/1",
+    "pdfLink": "http://arxiv.org/pdf/1.pdf",
+    "summary": "Summary A duplicate",
+    "updatedAt": "2024-01-01",
+    "fetchedAt": "2024-01-02",
+    "categories": ["cs.AI"]
+  },
+  {
+    "title": "Title B",
+    "absLink": "http://arxiv.org/abs/2",
+    "pdfLink": "http://arxiv.org/pdf/2.pdf",
+    "summary": "Summary B",
+    "updatedAt": "2024-01-01",
+    "fetchedAt": "2024-01-02",
+    "categories": ["cs.LG"]
+  }
+]
