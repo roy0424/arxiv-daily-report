@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -43,6 +45,18 @@ public class RssFetchJobConfig {
     @Bean
     public Job rssFetchJob() {
         return new JobBuilder("rssFetchJob", jobRepository)
+                .listener(new JobExecutionListener() {
+                    @Override
+                    public void beforeJob(JobExecution jobExecution) {
+                        paperCollector.clear();
+                        log.info("paperCollector cleared before job start");
+                    }
+
+                    @Override
+                    public void afterJob(JobExecution jobExecution) {
+                        log.info("paperCollector empty after job: {}", paperCollector.isEmpty());
+                    }
+                })
                 .start(partitionStep())
                 .next(saveStep())
                 .build();
@@ -85,6 +99,7 @@ public class RssFetchJobConfig {
 
                     objectMapper.writeValue(path.toFile(), result);
 
+                    paperCollector.clear();
                     log.info("✅ 저장 완료: {} ({}개)", path, result.size());
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
