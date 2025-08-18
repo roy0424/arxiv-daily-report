@@ -69,9 +69,9 @@ public class RssFetchJobConfig {
     @Bean
     @StepScope
     public ItemReader<List<PaperDto>> rssItemReader(
-            @Value("#{stepExecutionContext['categoryId']}") Long categoryId
+            @Value("#{stepExecutionContext['categoryIds']}") List<Long> categoryIds
     ) {
-        return new RssItemReader(categoryId, categoryRepository);
+        return new RssItemReader(categoryIds, categoryRepository);
     }
 
     @Bean
