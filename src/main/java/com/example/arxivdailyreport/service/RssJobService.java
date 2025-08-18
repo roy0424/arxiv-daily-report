@@ -1,6 +1,7 @@
 package com.example.arxivdailyreport.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class RssJobService {
     private final JobLauncher jobLauncher;
@@ -25,7 +27,7 @@ public class RssJobService {
                     .toJobParameters();
             jobLauncher.run(rssFetchJob, params);
         } catch (Exception e) {
-            System.err.println("❌ RSS Job 실행 실패: " + e.getMessage());
+            log.error("❌ RSS Job 실행 실패", e);
         }
     }
 
@@ -37,7 +39,7 @@ public class RssJobService {
                     .toJobParameters();
             jobLauncher.run(jsonImportJob, params);
         } catch (Exception e) {
-            System.err.println("❌ RSS DB Job 실행 실패: " + e.getMessage());
+            log.error("❌ RSS DB Job 실행 실패", e);
         }
     }
 }
