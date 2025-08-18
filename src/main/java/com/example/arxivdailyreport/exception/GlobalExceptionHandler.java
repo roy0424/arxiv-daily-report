@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex, HttpServletRequest request) {
-        ErrorCode errorCode = ex.getErrorcode();
+        ErrorCode errorCode = ex.getErrorCode();
         return buildErrorResponse(errorCode.getStatus(), ex, request);
     }
 
