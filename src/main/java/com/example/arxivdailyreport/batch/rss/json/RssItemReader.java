@@ -23,19 +23,21 @@ import java.util.Objects;
 @Slf4j
 @RequiredArgsConstructor
 public class RssItemReader implements ItemReader<List<PaperDto>> {
-    private final Long categoryId;
+    private final List<Long> categoryIds;
     private final CategoryRepository categoryRepository;
-    private boolean read = false;
+    private int currentIndex = 0;
 
 
     @Override
     public List<PaperDto> read() {
-        if (read) return null;
-        read = true;
-        return fetchRss();
+        if (currentIndex >= categoryIds.size()) {
+            return null;
+        }
+        Long categoryId = categoryIds.get(currentIndex++);
+        return fetchRss(categoryId);
     }
 
-    private List<PaperDto> fetchRss() {
+    private List<PaperDto> fetchRss(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
 
