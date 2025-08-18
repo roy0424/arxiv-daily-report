@@ -14,6 +14,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -23,8 +25,24 @@ public class CategoryInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        // TODO: Consider extracting this initialization into a batch job or admin tool
         String url = "https://arxiv.org/category_taxonomy";
-        Document doc = Jsoup.connect(url).get();
+        Document doc = null;
+        int maxRetries = 3;
+
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                doc = Jsoup.connect(url).get();
+                break;
+            } catch (IOException e) {
+                log.warn("카테고리 페이지 로딩 실패 ({}회) : {}", attempt, e.getMessage());
+                if (attempt == maxRetries) {
+                    log.error("카테고리 페이지 로딩 실패로 기본 카테고리로 초기화합니다.", e);
+                    initializeDefaultCategories();
+                    return;
+                }
+            }
+        }
 
         Elements h4Tags = doc.select("div.column.is-one-fifth > h4");
 
@@ -46,5 +64,18 @@ public class CategoryInitializer implements ApplicationRunner {
         }
 
         log.info("✅ 카테고리 초기화 완료 - 총 {}개 카테고리", h4Tags.size());
+    }
+
+    private void initializeDefaultCategories() {
+        for (ArxivCategory category : ArxivCategory.values()) {
+            if (!categoryRepository.existsByEndpoint(category.getEndpoint())) {
+                categoryRepository.save(Category.builder()
+                        .endpoint(category.getEndpoint())
+                        .name(category.getName())
+                        .build());
+                log.info("✅ 기본 카테고리 저장 성공 - {}: {}", category.getEndpoint(), category.getName());
+            }
+        }
+        log.info("✅ 기본 카테고리 초기화 완료 - 총 {}개 카테고리", ArxivCategory.values().length);
     }
 }
