@@ -47,8 +47,10 @@ public class Paper {
     }
 
     public void markFullTextCached() {
-        this.toBuilder()
-                .fullTextCached(true)
-                .build();
+        // Previous implementation attempted to use Lombok's builder to set the flag, but
+        // the result of the build operation was discarded. As a consequence the
+        // `fullTextCached` field on the current entity instance remained `false`.
+        // Mutate the existing instance directly so the change is persisted.
+        this.fullTextCached = true;
     }
 }
